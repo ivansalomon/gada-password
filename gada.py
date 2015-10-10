@@ -1,21 +1,19 @@
 #!/usr/bin/python
-#
-#  [Program]
-#
-#  GADA 0.01
-#  Generator Automatic Dictionaries Advanced
-#
-#
-#
-#  [Author]
-#
-#  Roberto Espinosa (Rochesto)
-#
-#
-#  [License]
-#
-#GGNU GENERAL PUBLIC LICENSE  Version 2
-###
+
+###################################
+#                                                                                       #
+#  GADA 0.1                                                                      #
+#          Generator Automatic Dictionaries Advanced       #
+#                                                                                       #
+#                                                                                       #
+#  Author                                                                          #
+#           Roberto Espinosa (Rochesto)                              #
+#                                                                                       #
+#                                                                                       #
+#  License                                                                         #
+#            GGNU GENERAL PUBLIC LICENSE  Version 2   #
+#                                                                                       #
+###################################
 
 import sys
 import os
@@ -43,116 +41,126 @@ wcto = config.getint('nums','wcto')
 
 limit = config.getint('nums','limit')
 
-def modifyDic():
-    print(mixBool)
-    fajl = open(sys.argv[-1], "r")
-    
-    listic = fajl.readlines()
+def main():
+    newDict = []
+    try:
+        file = open(sys.argv[-1], "r")
+    except:
+        print ("Error: Can't read file.\n")
+        print ("File don't exist\n")
+        print ("Use -h to help")
+        exit()
+
+    lines = file.readlines()
 
     linije = 0
-    for line in listic:
+    for line in lines:
         linije += 1
         
-    listica = []
-    for x in listic:
-        listica += x.split() #Delete \n
-
+    for x in lines:
+        newDict += x.split() #Delete \n
+    
+    print "\r\n      *************************************************"	
+    print "      *                                               *"
     if linije > limit:
-        print "\r\n      *************************************************"	
+        print "      *                                               *"
         print "      *                    \033[1;31mWARNING!!!\033[1;m                 *"
         print "      *         Using large wordlists in some         *"
         print "      *       options bellow is NOT recommended!      *"
-        print "      *************************************************\r\n"
-    else:
-        print "\r\n      *************************************************"	
         print "      *                                               *"
-        print "      *      Your dictionary have "+str(linije)+" words           *"
-        print "      *                                               *"
-        print "      *************************************************\r\n"
+    print "      *      Your dictionary have "+str(linije)+" words           *"
+    print "      *                                               *"
+    print "      *************************************************\r\n"
         
 ###    Combine words
     
-    if mixBool == True and linije > limit:
+    if linije > limit:
         print "\r\n[-] The Maximum number of words configured for concatenation is "+str(limit)
         sure = raw_input("> Do you want to concatenate all words from wordlist? Y/[N]: ").lower()
         if sure != "y":
             exit()
-
-    cont = ['']
+### Concat words
+    conc = []
     if mixBool == True:
-        for cont1 in listica:
-            for cont2 in listica:
-                if listica.index(cont1) != listica.index(cont2):
-                    cont.append(cont1+cont2)
-    
+        for conc1 in newDict:
+            for conc2 in newDict:
+                if newDict.index(conc1) != newDict.index(conc2):
+                    conc.append(conc1+conc2)
+
 ###     Especial Chars
-    spechars = ['']
+    spechars = []
     if charsBool == True:
-        for spec1 in chars:
-            spechars.append(spec1)
-            for spec2 in chars:
-                spechars.append(spec1+spec2)
-                for spec3 in chars:
-                    spechars.append(spec1+spec2+spec3)
-        
-###	Dates and chars
+        for char1 in chars:
+            spechars.append(char1)
+            for char2 in chars:
+                spechars.append(char1+char2)
+                for char3 in chars:
+                    spechars.append(char1+char2+char3)
+
+###	Dates
     
     startDate = ['19',  '20']
-    kombdate = []
+    endDate = []
     if datesBool == True:
-        if charsBool == True:
-            for w in listica:
-                for c in chars:
-                    for i in startDate:
-                        for j in range(100):
-                            kombdate.append(i+w+str(j)+c)
-            for w in listica:
-                for c in chars:
-                    for i in startDate:
-                        for j in range(100):
-                            kombdate.append(c+i+w+str(j))
-        for w in listica:
-            for i in startDate:
-                for j in range(100):
-                    kombdate.append(i+w+str(j))
+        for i in range(100):
+            endDate.append(str(i).zfill(2))
+            
+###    CApital Letters
     
-    kombinacija1 = list(comb(listica, years))
-    kombinacija1 += kombdate ### Add dates
-    kombinacija2 = ['']
+    capitals = []
+    if capitalBool == True:
+        for i in newDict:
+            capitals.append(i.title())
+        if mixBool == True:
+            tmp = []
+            for conc1 in capitals:
+                for conc2 in capitals:
+                    if capitals.index(conc1) != capitals.index(conc2):
+                        tmp.append(conc1+conc2)
+            capitals += tmp
+    
+###    combinations 
+    list0, list1, list2, list3, list4, list5 = [],  [],  [],  [], [],  []
+    list0 = list(comb(newDict,  years,  True))
+    list0 += list(comb(newDict,  years,  False))
+    
+    if mixBool == True:
+        list1 = list(comb(newDict, conc,  True))
+
     if charsBool == True:
-        kombinacija2 = list(comb(cont, years))
-    kombinacija3 = ['']
-    kombinacija4 = ['']
-    if charsBool == True:
-        kombinacija3 = list(comb(listica, spechars))
-        if charsBool == True:
-            kombinacija4 = list(comb(cont, spechars))
-    kombinacija5 = ['']
-    kombinacija6 = ['']
+        list2 = list(comb(newDict,  spechars,  True))
+        list2 += list(comb(list2, chars, False))
+        list2 += list(comb(newDict,  spechars,  False))
+
+    if datesBool == True:
+        list3 = list(comb(newDict,  startDate,  True))
+        list3 = list(comb(list3,  endDate,  False) )
+        
+    if capitalBool == True:
+        list4 = capitals
+        
     if randomBool == True:
-        kombinacija5 = list(concats(listica, numfrom, numto))
-        if charsBool == True:
-            kombinacija6 = list(concats(cont, numfrom, numto))
-    print("ERROR")
-    print "\r\n[+] Now making a dictionary..."
+        for i in range(numfrom,  numto):
+            for j in newDict:
+                list5.append(j+str(i))
+                list5.append(str(i)+j)
 
-    print "[+] Sorting list and removing duplicates..."
+    print "\n[+] Making a dictionary..."
 
-    komb_unique1 = dict.fromkeys(kombinacija1).keys()	
-    komb_unique2 = dict.fromkeys(kombinacija2).keys()
-    komb_unique3 = dict.fromkeys(kombinacija3).keys()
-    komb_unique4 = dict.fromkeys(kombinacija4).keys()
-    komb_unique5 = dict.fromkeys(kombinacija5).keys()
-    komb_unique6 = dict.fromkeys(kombinacija6).keys()
-    komb_unique7 = dict.fromkeys(listica).keys()
-    komb_unique8 = dict.fromkeys(cont).keys()
+    print "[+] Sorting out list and removing duplicates..."
+    
+    komb_unique1 = dict.fromkeys(list1).keys()    
+    komb_unique2 = dict.fromkeys(list2).keys()
+    komb_unique3 = dict.fromkeys(list3).keys()
+    komb_unique4 = dict.fromkeys(list4).keys()
+    komb_unique5 = dict.fromkeys(list5).keys()
+    komb_unique6 = dict.fromkeys(capitals).keys()
+    komb_unique7 = dict.fromkeys(newDict).keys()
+    komb_unique8 = dict.fromkeys(conc).keys()
 
     uniqlist = komb_unique1+komb_unique2+komb_unique3+komb_unique4+komb_unique5+komb_unique6+komb_unique7+komb_unique8
 
-    unique_lista = dict.fromkeys(uniqlist).keys()
-    unique_leet = []
-
-    unique_list = unique_lista + unique_leet
+    unique_list = dict.fromkeys(uniqlist).keys()
 
     unique_list_finished = []
     for x in unique_list:
@@ -160,18 +168,18 @@ def modifyDic():
             unique_list_finished.append(x)
 
     f = open ( sys.argv[-1]+'.txt', 'w' )
+    
     unique_list_finished.sort()
     f.write (os.linesep.join(unique_list_finished))
+
     f = open ( sys.argv[-1]+'.txt', 'r' )
     lines = 0
     for line in f:
         lines += 1
     f.close()
 
-
-    print "[+] Saving dictionary to \033[1;31m"+sys.argv[2]+".txt\033[1;m, counting \033[1;31m"+str(lines)+" words.\033[1;m"
-    print "[+] Now load your pistolero with \033[1;31m"+sys.argv[2]+".cupp.txt\033[1;m and shoot! Good luck!"
-    fajl.close()
+    print "[+] Saving dictionary to \033[1;31m"+sys.argv[-1]+".txt\033[1;m, counting \033[1;31m"+str(lines)+" words.\033[1;m"
+    file.close()
     exit()
 
 # for concatenations...
@@ -184,27 +192,30 @@ def concats(seq, start, stop):
 
 # for sorting and making combinations...
 
-def comb(seq, start):
+def comb(seq, start,  inv):
     for mystr in seq:
-        for mystr1 in start:
-            yield mystr + mystr1
+        if inv == False:
+            for mystr1 in start:
+                yield mystr + mystr1
+        else:
+            for mystr1 in start:
+                yield mystr1 + mystr
             
 def helpMenu():
-    print "\n\t\t\033[1;31mUsage:\033[1;m gada.py [Options] -w dictionary\r\n"
+    print "\n\t\t\033[1;31mUsage:\033[1;m gada.py [Options] dictionary\r\n"
+    print "\tDefault configuration file in \033[1;31m gada.cfg \033[1;m\n"	
     print "	[ Options ]\n"
     print "	-h	--help"
-    print "		 Default configuration file in gada.cfg\n"	
-
-    print "	-w	 Use this option to improve existing dictionary,"
-    print "		  and modify this.\n"
 
     print "	-d	 Add dates modifier\n"
     
     print "\t-c   Add especial characters modifier\n"
     
-    print "\t-r   Add random numbers\n"
+    print "\t-n   Add numbers\n"
     
     print "\t-C   Capital letters\n"
+    
+    print "\t-all  Add all modifiers\n"
     
     print "	-v	Version of the program\n"
     exit()
@@ -216,7 +227,7 @@ if __name__ == "__main__":
        helpMenu()
 
     elif sys.argv[1] == '-v':
-        print "\r\n	\033[1;31m 'gada.py'  v0.01\033[1;m\r\n"
+        print "\r\n	\033[1;31m 'gada.py'  v0.1\033[1;m\r\n"
         print "	\033[1;31m >> \033[1;mCreated by Rochesto"
         print "	\033[1;31m >> \033[1;mTake a look docs/README file for more info about the program\r\n"
         exit()
@@ -224,26 +235,29 @@ if __name__ == "__main__":
 
     elif sys.argv[1] > 1:
         
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 2:
             helpMenu()
         if len(sys.argv) > 8:
             print ("\t\t\033[1;31mToo many arguments\033[1;m")
             helpMenu()
         for i in sys.argv:
-            print (i)
             if (i == "-c"):
                 charsBool = True
             elif (i == "-d"):
                 datesBool = True
             elif(i == "-C"):
                 capitalBool = True
-            elif (i == "-r"):
+            elif (i == "-n"):
                 randomBool = True
             elif(i == "-m"):
-                print ("oooooo0")
                 mixBool = True
-                
-        modifyDic()
+            elif (i == "-all") or (i == "all"):
+                charsBool = True
+                datesBool = True
+                capitalBool = True
+                randomBool = True
+                mixBool = True
+        main()
 
     else:
         helpMenu()
