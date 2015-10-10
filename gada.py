@@ -68,7 +68,7 @@ def main():
         print "      *         Using large wordlists in some         *"
         print "      *       options bellow is NOT recommended!      *"
         print "      *                                               *"
-    print "      *      Your dictionary have "+str(linije)+" words           *"
+    print "               Your dictionary have "+str(linije)+" words           "
     print "      *                                               *"
     print "      *************************************************\r\n"
         
@@ -178,7 +178,7 @@ def main():
         lines += 1
     f.close()
 
-    print "[+] Saving dictionary to \033[1;31m"+sys.argv[-1]+".txt\033[1;m, counting \033[1;31m"+str(lines)+" words.\033[1;m"
+    print "[+] Saving dictionary to \033[1;31m"+sys.argv[-1]+".txt\033[1;m.\n[+] Words: \033[1;31m"+str(lines)+".\033[1;m"
     file.close()
     exit()
 
