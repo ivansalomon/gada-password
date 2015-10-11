@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
 ###################################
-#                                                                                       #
-#  GADA 0.1                                                                      #
-#          Generator Automatic Dictionaries Advanced       #
-#                                                                                       #
-#                                                                                       #
-#  Author                                                                          #
-#           Roberto Espinosa (Rochesto)                              #
-#                                                                                       #
-#                                                                                       #
-#  License                                                                         #
-#            GGNU GENERAL PUBLIC LICENSE  Version 2   #
-#                                                                                       #
+#                                                                                    #
+#  GADA 0.1                                                                   #
+#          Generator Automatic Dictionaries Advanced      #
+#                                                                                    #
+#                                                                                    #
+#  Author                                                                       #
+#           Roberto Espinosa (Rochesto)                            #
+#                                                                                   #
+#                                                                                   #
+#  License                                                                     #
+#          GGNU GENERAL PUBLIC LICENSE  Version 2   #
+#                                                                                   #
 ###################################
 
 import sys
@@ -149,6 +149,7 @@ def main():
 
     print "[+] Sorting out list and removing duplicates..."
     
+    komb_unique0 = dict.fromkeys(list0).keys()
     komb_unique1 = dict.fromkeys(list1).keys()    
     komb_unique2 = dict.fromkeys(list2).keys()
     komb_unique3 = dict.fromkeys(list3).keys()
@@ -158,7 +159,7 @@ def main():
     komb_unique7 = dict.fromkeys(newDict).keys()
     komb_unique8 = dict.fromkeys(conc).keys()
 
-    uniqlist = komb_unique1+komb_unique2+komb_unique3+komb_unique4+komb_unique5+komb_unique6+komb_unique7+komb_unique8
+    uniqlist = komb_unique0+komb_unique1+komb_unique2+komb_unique3+komb_unique4+komb_unique5+komb_unique6+komb_unique7+komb_unique8
 
     unique_list = dict.fromkeys(uniqlist).keys()
 
